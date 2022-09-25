@@ -53,14 +53,3 @@ class Raytracer(object):
         else:
             return self.background_color
 
-
-r = Raytracer(800, 600)
-
-r.scene = [
-    Sphere(V3(-3, -2, -16), 1, color(255, 0, 0)),
-    Sphere(V3(-3, 0, -16), 1.5, color(0, 255, 0)),
-    Sphere(V3(-3, 6, -16), 2, color(0, 0, 255))
-]
-
-r.render()
-r.write('r.bmp')
