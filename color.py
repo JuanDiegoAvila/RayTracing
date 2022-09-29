@@ -21,7 +21,7 @@ class color():
         return bytes([self.b, self.g, self.r])
 
     def color_range(self, r, g, b):
-        return color(clamping(r*255), clamping(g*255), clamping(b*255))
+        return color(self.clamping(r*255), self.clamping(g*255), self.clamping(b*255))
 
     def clamping(self, num):
         return int(max(min(num, 255), 0))
