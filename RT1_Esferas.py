@@ -2,6 +2,10 @@ from ray import *
 
 r = Raytracer(800, 600)
 
+black = Material(diffuse = color(0, 0, 0))
+orange = Material(diffuse = color(255, 140, 0))
+white = Material(diffuse = color(255, 255, 255))
+
 r.scene = [
     Sphere(V3(-0.5, -2.2, -16), 0.15, color(0, 0, 0)),
     Sphere(V3(0.5, -2.2, -16), 0.15, color(0, 0, 0)),

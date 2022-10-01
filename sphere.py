@@ -1,3 +1,5 @@
+from intersect import * 
+
 class Sphere(object):
     def __init__(self, center, radius, material):
         self.center = center
@@ -12,7 +14,7 @@ class Sphere(object):
         d2 =  l**2 - tca**2
         
         if d2 > self.radius**2:
-            return False
+            return None
 
         thc = (self.radius**2 - d2)**0.5
         t0 = tca - thc
@@ -21,6 +23,13 @@ class Sphere(object):
         if t0 < 0:
             t0 = t1
         if t0 < 0:
-            return False
+            return None
+        
+        impact = origin + direction * t0
+        normal = (impact - self.center).normalize()
 
-        return True
+        return Intersect(
+            distance = t0,
+            point = impact,
+            normal = normal
+        )

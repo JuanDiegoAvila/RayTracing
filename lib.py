@@ -30,3 +30,6 @@ def writeBMP(filename, width, height, framebuffer):
         f.write(framebuffer[y][x])
 
     f.close()
+
+def reflect(I, N):
+  return (I - N * 2 * (N @ I) ).normalize()
