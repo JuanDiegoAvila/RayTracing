@@ -6,14 +6,34 @@ class color():
     
 
     def __mul__(self, other):
+        r = self.r
+        g = self.g
+        b = self.b
+
         if(type(other) == int or type(other) == float):
-            r = self.r * other
-            g = self.g * other
-            b = self.b * other
+            r *= other
+            g *= other
+            b *= other
         else:
-            r = self.r * other.r
-            g = self.g * other.g
-            b = self.b * other.b
+            r *= other.r
+            g *= other.g
+            b *= other.b
+
+        return color(self.clamping(r), self.clamping(g), self.clamping(b))
+
+    def __add__(self, other):
+        r = self.r
+        g = self.g
+        b = self.b
+
+        if(type(other) == int or type(other) == float):
+            r += other
+            g += other
+            b += other
+        else:
+            r += other.r
+            g += other.g
+            b += other.b
 
         return color(self.clamping(r), self.clamping(g), self.clamping(b))
 
