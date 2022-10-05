@@ -7,6 +7,8 @@ from material import *
 from light import * 
 import random
 
+MAX_RECURSION_DEPTH = 3
+
 class Raytracer(object):
     def __init__(self, width, height):
         self.width = width
@@ -49,7 +51,10 @@ class Raytracer(object):
 
                     self.point(x, y, c)
 
-    def cast_ray(self, origin, direction):
+    def cast_ray(self, origin, direction, recursion = 0):
+        if recursion >= MAX_RECURSION_DEPTH:
+            return self.background_color
+
         material, intersect = self.scene_intersect(origin, direction)
         
         if material is None:
@@ -57,17 +62,39 @@ class Raytracer(object):
 
         light_direction = (self.light.position - intersect.point).normalize()
 
+        # shadow
+        shadow_bias = 1.1
+        shadow_origin = intersect.point + (intersect.normal * shadow_bias)
+        shadow_material, shadow_intersect = self.scene_intersect(shadow_origin, light_direction)
+
+        shadow_intensity = 1
+        if shadow_material:
+            # en la sombra
+            shadow_intensity = 0.3
+
         # diffuse component
         diffuse_intensity = light_direction @ intersect.normal
-        diffuse = material.diffuse * diffuse_intensity * material.albedo[0]
+        diffuse = material.diffuse * diffuse_intensity * material.albedo[0] * shadow_intensity
 
         # specular component
         light_reflection = reflect(light_direction, intersect.normal)
         reflection_intensity = max(0, (light_reflection @ direction))
-        specular_intensity = self.light.intensity * reflection_intensity ** material.spec
-        specular = self.light.c * specular_intensity * material.albedo[1]
+        specular_intensity = reflection_intensity ** material.spec
+        specular = self.light.c * specular_intensity * material.albedo[1] * self.light.intensity
 
-        return diffuse + specular
+        # reflection
+        if material.albedo[2] > 0:
+            reverse_direction = direction * -1
+            reflect_direction = reflect(reverse_direction, intersect.normal)
+            reflect_bias = -1.1 if reflect_direction @ intersect.normal else 1.1
+            reflect_origin = intersect.point + (intersect.normal * reflect_bias)
+            reflect_color = self.cast_ray(reflect_origin, reflect_direction, recursion + 1)
+        else:
+            reflect_color = color(0, 0, 0)
+
+        reflection = reflect_color * material.albedo[2]
+
+        return diffuse + specular + reflection
             
     def scene_intersect(self, origin, direction):
         zbuffer = 999999
@@ -83,3 +110,4 @@ class Raytracer(object):
                     intersect = object_intersect
 
         return material, intersect
+
