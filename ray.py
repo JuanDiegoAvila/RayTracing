@@ -4,7 +4,7 @@ from math import *
 from vector import *
 from sphere import *
 from material import *
-from light import * 
+from light import *
 import random
 
 MAX_RECURSION_DEPTH = 3
@@ -84,17 +84,27 @@ class Raytracer(object):
 
         # reflection
         if material.albedo[2] > 0:
-            reverse_direction = direction * -1
-            reflect_direction = reflect(reverse_direction, intersect.normal)
-            reflect_bias = -1.1 if reflect_direction @ intersect.normal else 1.1
+            reflect_direction = reflect(direction, intersect.normal)
+            reflect_bias = -0.5 if reflect_direction @ intersect.normal < 0 else 0.5
             reflect_origin = intersect.point + (intersect.normal * reflect_bias)
             reflect_color = self.cast_ray(reflect_origin, reflect_direction, recursion + 1)
         else:
             reflect_color = color(0, 0, 0)
-
+        
         reflection = reflect_color * material.albedo[2]
 
-        return diffuse + specular + reflection
+        # refraction
+        if material.albedo[3] > 0:
+            refract_direction = refract(direction, intersect.normal, material.refractive_index)
+            refract_bias = -0.5 if refract_direction @ intersect.normal < 0 else 0.5
+            refract_origin = intersect.point + (intersect.normal * refract_bias)
+            refract_color = self.cast_ray(refract_origin, refract_direction, recursion + 1)
+        else:
+            refract_color = color(0, 0, 0)
+
+        refraction = refract_color * material.albedo[3]
+
+        return diffuse + specular + reflection + refraction
             
     def scene_intersect(self, origin, direction):
         zbuffer = 999999
