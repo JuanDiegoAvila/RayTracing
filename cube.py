@@ -1,4 +1,3 @@
-from re import L
 from plane import *
 from vector import *
 
@@ -11,8 +10,8 @@ class Cube(object):
 
     def ray_intersect(self, origin, direction):
 
-        min = V3((self.center.x - self.w/2), (self.center.y - self.w/2), (self.center.z - self.w/2))
-        max = V3((self.center.x + self.w/2), (self.center.y + self.w/2), (self.center.z + self.w/2))
+        min = V3(round((self.center.x - self.w/2), 2), round((self.center.y - self.w/2), 2), round((self.center.z - self.w/2), 2))
+        max = V3(round((self.center.x + self.w/2), 2), round((self.center.y + self.w/2), 2), round((self.center.z + self.w/2), 2))
         
         tmin = ((self.center.x - self.w/2) - origin.x) / direction.x
         tmax = ((self.center.x + self.w/2) - origin.x) / direction.x
@@ -91,6 +90,8 @@ class Cube(object):
             return False
 
         if face == None:
+            print(max.x)
+            print(impact)
             return False
 
         x, y = self.getNormal(face, impact)
