@@ -45,7 +45,7 @@ def refract(I, N, roi):
     etai *= -1
     etat *= -1
     N *= -1
-
+    
   eta = etai/etat
   k = 1 - eta ** 2 * (1 - cosi ** 2)
 

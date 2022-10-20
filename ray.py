@@ -43,7 +43,7 @@ class Raytracer(object):
             for x in range(self.width):
                 if random.random() < self.density:
                     i = ((2 * (x + 0.5) / self.width ) - 1) * ar * tana
-                    j = (1 - (2 * (y + 0.5) / self.height )) * tana
+                    j = ((2 * (y + 0.5) / self.height) - 1) * tana
 
                     direction = V3(i, j, -1).normalize()
                     origin = V3(0, 0, 0)
@@ -51,20 +51,27 @@ class Raytracer(object):
 
                     self.point(x, y, c)
 
+    def get_background(self, direction):
+        if self.envmap:
+            return self.envmap.get_color(direction)
+        else:
+            return self.background_color
+
+
     def cast_ray(self, origin, direction, recursion = 0):
         if recursion >= MAX_RECURSION_DEPTH:
-            return self.background_color
+            return self.get_background(direction)
 
         material, intersect = self.scene_intersect(origin, direction)
         
         if material is None:
-            return self.background_color
+            return self.get_background(direction)
 
         light_direction = (self.light.position - intersect.point).normalize()
-
+        
         # shadow
         shadow_bias = 1.1
-        shadow_origin = intersect.point + (intersect.normal * shadow_bias)
+        shadow_origin = intersect.point + intersect.normal * shadow_bias
         shadow_material, shadow_intersect = self.scene_intersect(shadow_origin, light_direction)
 
         shadow_intensity = 1
@@ -74,6 +81,7 @@ class Raytracer(object):
 
         # diffuse component
         diffuse_intensity = light_direction @ intersect.normal
+
         diffuse = material.diffuse * diffuse_intensity * material.albedo[0] * shadow_intensity
 
         # specular component
@@ -118,6 +126,9 @@ class Raytracer(object):
                     zbuffer = object_intersect.distance
                     material = o.material
                     intersect = object_intersect
+
+        if material and material.texture:
+           material.changeDiffuse(intersect)
 
         return material, intersect
 
