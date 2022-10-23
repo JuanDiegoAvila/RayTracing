@@ -23,7 +23,7 @@ class Raytracer(object):
 
     def clear(self):
         self.framebuffer = [
-            [self.background_color for x in range(self.width)]
+            [self.background_color.toBytes() for x in range(self.width)]
             for y in range(self.height)
         ]
     
@@ -42,7 +42,7 @@ class Raytracer(object):
         for y in range(self.height):
             for x in range(self.width):
                 if random.random() < self.density:
-                    i = ((2 * (x + 0.5) / self.width ) - 1) * ar * tana
+                    i = ((2 * (x + 0.5) / self.width) - 1) * ar * tana
                     j = ((2 * (y + 0.5) / self.height) - 1) * tana
 
                     direction = V3(i, j, -1).normalize()

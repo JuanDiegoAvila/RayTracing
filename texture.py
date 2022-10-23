@@ -31,4 +31,9 @@ class Texture(object):
         x = round(tx * (self.width)-1)
         y = round(ty * (self.height)-1)
 
-        return self.pixels[y][x]
+        try:
+            return self.pixels[y][x]
+        except:
+            x = int(max(min(x, self.width), 0))
+            y = int(max(min(x, self.height), 0))
+            return self.pixels[y][x]

@@ -13,8 +13,13 @@ class Cube(object):
         min = V3(round((self.center.x - self.w/2), 2), round((self.center.y - self.w/2), 2), round((self.center.z - self.w/2), 2))
         max = V3(round((self.center.x + self.w/2), 2), round((self.center.y + self.w/2), 2), round((self.center.z + self.w/2), 2))
         
-        tmin = ((self.center.x - self.w/2) - origin.x) / direction.x
-        tmax = ((self.center.x + self.w/2) - origin.x) / direction.x
+        tmin = 9999999
+        tmax = 9999999
+
+        if direction.x != 0:
+            tmin = ((self.center.x - self.w/2) - origin.x) / direction.x
+            tmax = ((self.center.x + self.w/2) - origin.x) / direction.x
+
 
         if tmin > tmax:
             tmin, tmax = tmax, tmin
@@ -87,11 +92,6 @@ class Cube(object):
             return False
 
         if tmin < 0:
-            return False
-
-        if face == None:
-            print(max.x)
-            print(impact)
             return False
 
         x, y = self.getNormal(face, impact)
