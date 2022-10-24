@@ -35,8 +35,10 @@ obsidian_block = Material(diffuse = color(0, 0, 0), albedo=[0.9, 0.1, 0, 0], spe
 portal_block = Material(diffuse = color(138, 43, 226), albedo=[0.9, 0.8, 0.3, 0], spec=125, refractive_index=1.9, texture = [tPortal, tPortal, tPortal, tPortal, tPortal, tPortal])
 netherrack_block = Material(diffuse = color(0, 0, 0), albedo=[0.9, 0.1, 0, 0], spec=10, texture = [tNetherrack, tNetherrack, tNetherrack, tNetherrack, tNetherrack, tNetherrack])
 magma_block = Material(diffuse = color(0, 0, 0), albedo=[0.9, 0.1, 0, 0], spec=10, texture = [tMagma, tMagma, tMagma, tMagma, tMagma, tMagma])
+water_block = Material(diffuse = color(135, 206, 235), albedo=[0.9, 0.1, 0.3, 0.3], spec=1425, refractive_index = 1.333)
 
 r.scene = [
+    Plane(V3(-2.5, -3, -11), 4, 3, water_block),
     Cube(V3(-2.5, -2, -14), 1, grass_block),
     Cube(V3(-1.5, -2, -14), 1, netherrack_block),
     Cube(V3(-0.5, -2, -14), 1, magma_block),
@@ -135,9 +137,8 @@ r.scene = [
     Cube(V3(-7.5, 1, -16), 1, leaves_block),
     Cube(V3(-7.5, 1, -17), 1, leaves_block),
     Cube(V3(-6.5, 1, -15), 1, leaves_block),
-    Cube(V3(-5.5, 1, -15), 1, leaves_block),
+    Cube(V3(-5.5, 1, -15), 1, leaves_block)
 ]
-
 
 
 r.render()
